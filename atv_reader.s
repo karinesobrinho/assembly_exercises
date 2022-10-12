@@ -6,14 +6,16 @@
 main:
 
     move $t0, $zero #indice do array
-    move $t1, $zero #valor a ser colocado no array
+    #move $t1, $zero #valor a ser colocado no array
     li $t2, 40 #tamanho do array
     li $t3, 5
     li $t4, 8
 
     loop:
         beq $t0, $t2, saiLoop #quando tiverem o mesmo valor sai do loop
-        sw $t1, myArray($t0) #armazena no vetor
+        addi $v0, $zero, 5
+        syscall
+        sw $v0, myArray($t0) #armazena no vetor
         addi $t0, $t0, 4 #incremento indice
         addi $t1, $t1, 1
         j loop #volta no comeco do loop
