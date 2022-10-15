@@ -28,19 +28,23 @@ main:
     move $t3, $zero
 
     loop: 
+        addi $v0, $zero, 12 #chamada de escrita 
+        syscall
+        add $t3, $v0, $zero #armazena numero escrito no vetor
+        
         beq $t3, '.', saiLoop #quando tiverem o mesmo valor sai do loop
 
         beq $t3, '(', inc_abre
         beq $t3, ')', inc_fecha
-
-        addi $v0, $zero, 12 #chamada de escrita 
-        syscall
-        add $t3, $v0, $zero #armazena numero escrito no vetor
         j loop #volta no comeco do loop
-    
+
     inc_abre:
+        addi $t0, 1
+        j loop
 
     inc_fecha:
+        addi $t1, 1
+        j loop
 
     saiLoop: #codigo para encerrar o programa 
         li $v0,10
