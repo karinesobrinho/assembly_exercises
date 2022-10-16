@@ -40,10 +40,16 @@
 
 main:
     move $t0, $zero #indice do array
-    li $t1, 0 #auxiliar preenchimento do vetor
+    move $t1, $zero #auxiliar preenchimento do vetor
     move $t2, $zero 
 
     loop:
+        move $t3, $zero
+
+        addi $v0, $zero, 12 #chamada de escrita da string
+        syscall
+        add $t2, $v0, $zero #armazena valor escrito
+
         beq $t2, 's', saiPrograma #quando tiverem o mesmo valor sai do loop
 
         beq $t2, 'd', desempilha #quando tiverem o mesmo valor sai do loop
@@ -51,30 +57,23 @@ main:
         beq $t2, 'e', empilha #quando tiverem o mesmo valor sai do loop
 
         beq $t2, 'i', imprime #quando tiverem o mesmo valor sai do loop
-
-        addi $v0, $zero, 12 #chamada de escrita do numero
-        syscall
-        add $t2, $v0, $zero #armazena valor escrito
         j loop
 
         desempilha:
+            sub $t1, $t1, 1
             j saiPrograma
 
         empilha:
-            j saiPrograma
+            addi $v0, $zero, 5 #chamada de escrita do numero
+            syscall
+            sw $v0, myArray($t1) #armazena numero escrito no vetor
+            addi $t0, $t0, 4 #incremento indice do vetor
+            addi $t1, $t1, 1 #incremento indice do vetor
+            j loop #volta no comeco do loop
 
         imprime:
-            move $t4
-            print_loop:
-                beq $t4, t1, loop #quando tiverem o mesmo valor sai do loop
-                
-                li $v0, 1 
-                lw $a0, myArray($t4) #imprimir numero do array na posicao t0
-                syscall #chamada do sistema
-                
-                addi $t1, $t1, 1 #incrementa auxiliar do print
-                j print_loop
-
+            j saiPrograma
+      
         saiPrograma: #codigo para encerrar o programa 
             li $v0,10
             syscall
