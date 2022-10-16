@@ -35,7 +35,7 @@
 .data
     myArray: .space 40 #array de 10 posicoes
     str_space: .asciiz " " #espaco em branco a ser printado
-    option: .space 4
+    str_line: .asciiz "\n" #linha em branco a ser printada
 .text
 
 main:
@@ -44,8 +44,8 @@ main:
     move $t2, $zero 
 
     loop:
-        move $t3, $zero
-
+        move $t1, $zero
+        
         addi $v0, $zero, 12 #chamada de escrita da string
         syscall
         add $t2, $v0, $zero #armazena valor escrito
@@ -60,19 +60,35 @@ main:
         j loop
 
         desempilha:
-            sub $t1, $t1, 1
-            j saiPrograma
+            sub $t0, $t0, 4
+            j loop
 
         empilha:
             addi $v0, $zero, 5 #chamada de escrita do numero
             syscall
-            sw $v0, myArray($t1) #armazena numero escrito no vetor
+            sw $v0, myArray($t0) #armazena numero escrito no vetor
             addi $t0, $t0, 4 #incremento indice do vetor
-            addi $t1, $t1, 1 #incremento indice do vetor
             j loop #volta no comeco do loop
 
         imprime:
-            j saiPrograma
+            beq $t0, $t1, imprime_linha #se acabar o vetor sai da impressao
+
+            li $v0, 1 
+            lw $a0, myArray($t1) #imprimir numero do array na posicao t0
+            syscall #chamada do sistema
+            
+            addi $v0, $zero, 4 #codigo para impressao
+            la $a0, str_space #imprimir espaco em branco
+            syscall #chamada do sistema
+
+            addi $t1, $t1, 4
+            j imprime
+
+        imprime_linha:
+            addi $v0, $zero, 4 #codigo para impressao
+            la $a0, str_line #imprimir espaco em branco
+            syscall #chamada do sistema
+            j loop
       
         saiPrograma: #codigo para encerrar o programa 
             li $v0,10
