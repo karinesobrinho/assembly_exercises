@@ -18,7 +18,7 @@
 #Desbalanceada
 
 .data
-str1: .asciiz "“Balanceada\n"
+str1: .asciiz "Balanceada\n"
 str2: .asciiz "Desbalanceada\n"
 .text
 
@@ -44,8 +44,30 @@ main:
 
     inc_fecha:
         addi $t1, 1
+
+        slt $t4, $t0, $t1 #se $t0 for menor do que $t1 $t4 recebe 1
+        
         j loop
 
+    print_bal:
+        addi $v0, $zero, 4 # codigo syscall print_str
+        la $a0, str1 # primeira string a ser exibida
+        syscall
+        j saiPrograma
+
+    print_des:
+        addi $v0, $zero, 4 # codigo syscall print_str
+        la $a0, str2 # primeira string a ser exibida
+        syscall
+        j saiPrograma
+
     saiLoop: #codigo para encerrar o programa 
+        beq $t4, 1, print_des
+
+        beq $t0, $t1, print_bal
+
+        j print_des
+
+    saiPrograma:
         li $v0,10
         syscall
