@@ -32,3 +32,41 @@
 #1 2 3 
 #1 2 5 
 
+.data
+    myArray: .space 40 #array de 10 posicoes
+    str_space: .asciiz " " #espaco em branco a ser printado
+    option: .space 4
+.text
+
+main:
+    move $t0, $zero #indice do array
+    li $t1, 40 #tamanho do array
+    li $t2, 0 #auxiliar preenchimento do vetor
+    move $t3, $zero 
+
+    loop:
+        beq $t3, 's', saiPrograma #quando tiverem o mesmo valor sai do loop
+
+        beq $t3, 'd', desempilha #quando tiverem o mesmo valor sai do loop
+
+        beq $t3, 'e', empilha #quando tiverem o mesmo valor sai do loop
+
+        beq $t3, 'i', imprime #quando tiverem o mesmo valor sai do loop
+
+        addi $v0, $zero, 12 #chamada de escrita do numero
+        syscall
+        add $t3, $v0, $zero #armazena valor escrito
+        j loop
+
+        desempilha:
+            j saiPrograma
+
+        empilha:
+            j saiPrograma
+
+        imprime:
+            j saiPrograma
+
+        saiPrograma: #codigo para encerrar o programa 
+            li $v0,10
+            syscall
